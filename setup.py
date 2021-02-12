@@ -6,5 +6,6 @@ setup(
    description='Is a pretty simple wsgi framework',
    author='Yerzhan Aitzhanov',
    author_email='yerzhan.aitzhanov@gmail.com',
-   packages=['wsgi_framework']
+   packages=['wsgi_framework'],
+   install_requires=['jinja2']
 )
