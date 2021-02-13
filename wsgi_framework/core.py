@@ -9,7 +9,11 @@ class Application:
     ]
 
     def __call__(self, environ, start_response):
-        view = self.urls.get(environ['PATH_INFO'], NotFoundView())
+        path = environ['PATH_INFO']
+        if not path.endswith('/'):
+            path += '/'
+
+        view = self.urls.get(path, NotFoundView())
         request = {}
 
         # apply all middlewares
