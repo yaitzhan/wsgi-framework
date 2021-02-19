@@ -1,11 +1,17 @@
+from .response import HTTPResponseNotAllowed, HTTPResponseNotFound
+
+
 class BaseView:
-    return_code = None
-    body = None
+    https_allowed_methods = ['get', 'post']
 
     def __call__(self, request):
-        return self.return_code, self.body
+        if request.get('method') in self.https_allowed_methods:
+            handler = getattr(self, request.get('method'), HTTPResponseNotAllowed()())  # ugly
+            return handler(request)
+        else:
+            return HTTPResponseNotAllowed()()  # ugly
 
 
 class NotFoundView(BaseView):
-    return_code = '404 Not Found'
-    body = [b'<h1>Not Found View Example</h1>']
+    def __call__(self, request):
+        return HTTPResponseNotFound()()  # ugly

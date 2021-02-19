@@ -14,7 +14,9 @@ class Application:
             path += '/'
 
         view = self.urls.get(path, NotFoundView())
-        request = {}
+        request = self.setup_request(environ)
+
+        print('REQUEST:', request)  # for debug
 
         # apply all middlewares
         for middleware in self.middlewares:
@@ -22,3 +24,10 @@ class Application:
         code, body = view(request)
         start_response(code, [('Content-Type', 'text/html')])
         return body
+
+    def setup_request(self, environ):
+        request = {
+            'method': environ['REQUEST_METHOD'],
+        }
+
+        return request
