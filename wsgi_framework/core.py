@@ -15,15 +15,16 @@ class Application:
         if not path.endswith('/'):
             path += '/'
 
-        view = self.urls.get(path, NotFoundView())
         request = self.setup_request(environ)
+        view_cls = self.urls.get(path, NotFoundView)  # get the defined in urls.py view-class
 
         print('REQUEST:', request)  # for debug
 
         # apply all middlewares
         for middleware in self.middlewares:
             middleware(environ, request)
-        code, body = view(request)
+        view = view_cls(request)  # initialize view class passing request
+        code, body = view.handle()
         start_response(code, [('Content-Type', 'text/html')])
         return body
 
