@@ -30,7 +30,8 @@ class Application:
     def setup_request(self, environ):
         request = {
             'method': environ['REQUEST_METHOD'],
-            'body': self.body(environ)  # parse POST body data
+            'body': self.body(environ),  # parse POST body data
+            'query_params': self.get_query_params(environ)  # parse GET query params
         }
 
         return request
@@ -42,3 +43,12 @@ class Application:
         if data:
             return json.loads(data.decode(encoding='utf-8').strip())
         return {}
+
+    def get_query_params(self, environ):
+        query_params_str = environ.get('QUERY_STRING')
+        if query_params_str:
+            result = {}
+            for each in query_params_str.split('&'):
+                k, v = each.split('=')
+                result[k] = v
+            return result
