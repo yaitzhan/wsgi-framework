@@ -1,5 +1,3 @@
-import json
-
 from .views import NotFoundView
 from .middleware import MobileRefererMiddleware
 
@@ -42,7 +40,13 @@ class Application:
         content_length = int(content_length_data) if content_length_data else 0
         data = environ.get('wsgi.input').read(content_length) if content_length > 0 else b''
         if data:
-            return json.loads(data.decode(encoding='utf-8').strip())
+            data = data.decode(encoding='utf-8')
+            result = {}
+            params = data.split('&')
+            for item in params:
+                k, v = item.split('=')
+                result[k] = v
+            return result
         return {}
 
     def get_query_params(self, environ):
