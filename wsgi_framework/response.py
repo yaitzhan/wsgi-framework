@@ -19,7 +19,7 @@ class HTTPResponse:
 
     @property
     def content(self):
-        return [self._content.encode(encoding='utf-8')]
+        return self._content
 
     @content.setter
     def content(self, value):

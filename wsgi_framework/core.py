@@ -28,7 +28,7 @@ class Application:
 
     def setup_request(self, environ):
         request = {
-            'method': environ['REQUEST_METHOD'],
+            'method': environ['REQUEST_METHOD'].lower(),
             'body': self.body(environ),  # parse POST body data
             'query_params': self.get_query_params(environ)  # parse GET query params
         }
