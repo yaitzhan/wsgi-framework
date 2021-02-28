@@ -1,4 +1,6 @@
-from .views import NotFoundView
+import inspect
+
+from .views import NotFoundView, BaseView
 from .middleware import MobileRefererMiddleware
 
 
@@ -21,8 +23,11 @@ class Application:
         # apply all middlewares
         for middleware in self.middlewares:
             middleware(environ, request)
-        view = view_cls(request)  # initialize view class passing request
-        code, body = view.handle()
+        if inspect.isclass(view_cls):
+            view = view_cls(request)  # initialize view class passing request
+            code, body = view.handle()
+        else:
+            code, body = view_cls(request)
         start_response(code, [('Content-Type', 'text/html')])
         return body
 
