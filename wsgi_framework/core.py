@@ -57,3 +57,9 @@ class Application:
                 k, v = each.split('=')
                 result[k] = v
             return result
+
+    def route(self, rule):
+        def decorator(f):
+            self.urls[rule] = f
+            return f
+        return decorator
