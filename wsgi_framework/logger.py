@@ -19,10 +19,14 @@ class Logger(metaclass=SingletonMeta):
     def __init__(self, name, logs_dir):
         self.name = name
         self.logs_dir = logs_dir
+        self.handlers = []
+
+    def set_handler(self, handler):
+        self.handlers.append(handler)
 
     def _log(self, log_record):
-        with open(os.path.join(self.logs_dir, '{}.log'.format(self.name)), 'a') as f:
-            f.write(log_record)
+        for each in self.handlers:
+            each.handle(log_record)  # don't forget to implement handle func for handler
 
     def info(self, log_record):
         log_record = 'INFO: ' + log_record
@@ -39,3 +43,14 @@ class Logger(metaclass=SingletonMeta):
     def warning(self, log_record):
         log_record = 'WARNING: ' + log_record
         self._log(log_record)
+
+
+class FileHandler:
+    def __init__(self, filename, logs_dir, mode='a'):
+        self.filename = filename
+        self.mode = mode
+        self.logs_dir = logs_dir
+
+    def handle(self, log_record):
+        with open(os.path.join(self.logs_dir, '{}.log'.format(self.filename)), self.mode) as f:
+            f.write(log_record)
